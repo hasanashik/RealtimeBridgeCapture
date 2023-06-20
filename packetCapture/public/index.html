@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Packet Capture</title>
+  <style>
+    body {
+      font-family: "Courier New", monospace;
+    }
+
+    #packet-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 20px;
+    }
+
+    .packet-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      font-size: 12px;
+      position: relative;
+    }
+
+    .line-number {
+      position: absolute;
+      left: -40px;
+      top: 0;
+      width: 30px;
+      text-align: center;
+      font-weight: bold;
+      background-color: #ddd;
+      color: #555;
+      border-radius: 50%;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <ul id="packet-list"></ul>
+
+  <script>
+    const ws = new WebSocket('ws://192.168.56.101:3000');
+    let lineNumber = 1;
+
+    ws.addEventListener('message', (event) => {
+      const packet = event.data;
+
+      const listItem = document.createElement('li');
+      listItem.classList.add('packet-item');
+
+      const lineNumberElement = document.createElement('span');
+      lineNumberElement.classList.add('line-number');
+      lineNumberElement.textContent = lineNumber;
+
+      listItem.appendChild(lineNumberElement);
+      listItem.appendChild(document.createTextNode(formatPacket(packet)));
+
+      const packetList = document.getElementById('packet-list');
+      packetList.insertBefore(listItem, packetList.firstChild);
+
+      lineNumber++;
+    });
+
+    // Helper function to format the packet for better readability
+    function formatPacket(packet) {
+      // Split the packet by newlines for individual lines
+      const lines = packet.split('\n');
+
+      // Add indentation to each line for better visibility
+      const indentedLines = lines.map(line => `  ${line}`);
+
+      // Join the lines back with newline character
+      return indentedLines.join('\n');
+    }
+  </script>
+</body>
+</html>
