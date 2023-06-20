@@ -5,6 +5,7 @@ In this project our objective is:
 
 ![](media/3f9e346b2e042bda699ece0e7179e286.png)
 
+![](media/demo.gif)
 Create a bridge and connect two namespaces
 
 We will use vagrant to create a VM and create two namespaces inside the VM.
