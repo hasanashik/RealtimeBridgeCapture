@@ -4,7 +4,7 @@ In this project our objective is:
 2.  Visualize packet passing through bridge in web browse using NodeJS, Express JS. Set up an HTTP server with an Express application, create a WebSocket server, spawns a tcpdump process to capture packets, and use WebSockets to stream the captured packets to connected clients in real-time.
 
 ![](media/3f9e346b2e042bda699ece0e7179e286.png)
-![](media/Packet capture Linux namespace-bridge and visualize in browser using Nodejs.webm)
+![](media/Packet capture Linux namespace-bridge and visualize in browser NodeJS.gif)
 Create a bridge and connect two namespaces
 
 We will use vagrant to create a VM and create two namespaces inside the VM.
