@@ -7,70 +7,78 @@
       font-family: "Courier New", monospace;
     }
 
-    #packet-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 20px;
+    table {
+      border-collapse: collapse;
+      width: 100%;
     }
 
-    .packet-item {
+    th, td {
       padding: 10px;
       border: 1px solid #ddd;
-      margin-bottom: 10px;
-      font-size: 12px;
-      position: relative;
+      text-align: left;
     }
 
-    .line-number {
-      position: absolute;
-      left: -40px;
-      top: 0;
-      width: 30px;
-      text-align: center;
-      font-weight: bold;
-      background-color: #ddd;
-      color: #555;
-      border-radius: 50%;
-      padding: 5px;
+    th {
+      background-color: #f2f2f2;
     }
   </style>
 </head>
 <body>
-  <ul id="packet-list"></ul>
+  <table id="packet-table">
+    <thead>
+      <tr>
+        <th>Line Number</th>
+        <th>Source IP</th>
+        <th>Destination IP</th>
+        <th>Packet Message</th>
+      </tr>
+    </thead>
+    <tbody id="packet-list"></tbody>
+  </table>
 
   <script>
     const ws = new WebSocket('ws://192.168.56.101:3000');
     let lineNumber = 1;
+    let sourceIP, destinationIP;
 
     ws.addEventListener('message', (event) => {
       const packet = event.data;
 
-      const listItem = document.createElement('li');
-      listItem.classList.add('packet-item');
+      const tableRow = document.createElement('tr');
 
-      const lineNumberElement = document.createElement('span');
-      lineNumberElement.classList.add('line-number');
-      lineNumberElement.textContent = lineNumber;
+      sourceIP = packet.match(/(\d+\.\d+\.\d+\.\d+)/g)[0];
+      destinationIP = packet.match(/(\d+\.\d+\.\d+\.\d+)/g)[1];
 
-      listItem.appendChild(lineNumberElement);
-      listItem.appendChild(document.createTextNode(formatPacket(packet)));
+      const lineNumberCell = document.createElement('td');
+      lineNumberCell.textContent = lineNumber;
+
+      const sourceIPCell = document.createElement('td');
+      sourceIPCell.textContent = sourceIP;
+
+      const destinationIPCell = document.createElement('td');
+      destinationIPCell.textContent = destinationIP;
+
+      const packetMessageCell = document.createElement('td');
+      packetMessageCell.innerHTML = formatPacket(packet);
+
+      tableRow.appendChild(lineNumberCell);
+      tableRow.appendChild(sourceIPCell);
+      tableRow.appendChild(destinationIPCell);
+      tableRow.appendChild(packetMessageCell);
 
       const packetList = document.getElementById('packet-list');
-      packetList.insertBefore(listItem, packetList.firstChild);
+      packetList.insertBefore(tableRow, packetList.firstChild);
 
       lineNumber++;
     });
 
-    // Helper function to format the packet for better readability
     function formatPacket(packet) {
-      // Split the packet by newlines for individual lines
       const lines = packet.split('\n');
-
-      // Add indentation to each line for better visibility
       const indentedLines = lines.map(line => `  ${line}`);
+      const formattedLines = indentedLines.map(line => line.replace(sourceIP, '<td>' + sourceIP + '</td>').replace(destinationIP, '<td>' + destinationIP + '</td>'));
+      const tableRow = '<tr>' + formattedLines.join('\n') + '</tr>';
 
-      // Join the lines back with newline character
-      return indentedLines.join('\n');
+      return tableRow;
     }
   </script>
 </body>
