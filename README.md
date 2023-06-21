@@ -108,6 +108,8 @@ Now clone the project
 
 Git clone <https://github.com/hasanashik/RealtimeBridgeCapture.git>
 
+**Before proceeding to further steps, it is assumed that you have already created namespaces and bridge with name br_dev and ping is working between two namespaces.**
+
 Change directory to packetCapture and run the NodeJS project using
 
 Node index.js
@@ -118,6 +120,6 @@ Optionally you can open a new terminal and do tcpdump on br_dev interface using 
 
 From web browser now go to <http://your_vm_ip:3000/>
 
-![](media/f858b2f6cf383c171aadc782f66cf924.png)
+![](media/88119fdb0097395d60a0f1a2fb43d05c.png)
 
 After starting the ping from one namespace to another you will now see live packets in the browser.
